@@ -1,21 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"time"
 )
 
 //START OMIT
-func Greet(name string) {
-	log.Printf("Greetings, %s!", name)
-	time.Sleep(3 * time.Second)
+func Greet(name string, response_chan chan string) {
+	greeting := fmt.Sprintf("Greetings, %s!", name)
+	response_chan <- greeting
 }
 
 func main() {
-	go Greet("Alice")
-	go Greet("Bob")
 
-	time.Sleep(5 * time.Second)
+	cs := make(chan string)
+	go Greet("Alice", cs)
+	greeting := <-cs
+	log.Print(greeting)
 }
 
 //END OMIT
