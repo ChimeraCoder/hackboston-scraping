@@ -18,6 +18,7 @@ func Greet(name string, response_chan chan string) {
 	time.Sleep(time.Duration(secs) * time.Second)
 	greeting := fmt.Sprintf("Greetings, %s!", name)
 	response_chan <- greeting
+	close(response_chan)
 }
 
 func main() {
@@ -26,11 +27,23 @@ func main() {
 	bc := make(chan string)
 	go Greet("Alice", ac)
 	go Greet("Bob", bc)
-	select {
-	case greeting := <-ac:
-		log.Print(greeting)
-	case greeting := <-bc:
-		log.Print(greeting)
+	for {
+		select {
+		case greeting, ok := <-ac:
+			if !ok {
+				ac = nil
+			}
+			log.Print(greeting)
+		case greeting, ok := <-bc:
+			if !ok {
+				bc = nil
+			}
+			log.Print(greeting)
+		}
+
+		if ac == nil && bc == nil {
+			break
+		}
 	}
 }
 
