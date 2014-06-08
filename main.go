@@ -12,7 +12,10 @@ func Greet(name string) {
 }
 
 func main() {
-	Greet("Alice")
-	Greet("Bob")
+	go Greet("Alice")
+	go Greet("Bob")
+
+	time.Sleep(5 * time.Second)
 }
+
 //END OMIT
