@@ -10,15 +10,14 @@ type User struct {
 	Id   int64
 }
 
-var AliceJson = `{"name" : "Alice", "id" : 121312}`
+var Bob = User{"Bob", 12312}
 
 func main() {
-	var result User
-	err := json.Unmarshal([]byte(AliceJson), &result)
+	bts, err := json.Marshal(Bob)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%+v\n", result)
+	fmt.Printf("%+v\n", string(bts))
 }
 
 //END OMIT
